@@ -36,6 +36,7 @@ var TOOLS = {
   'private-domain-rfm-studio': {n:'私域流量與 RFM 分析', ic:'👥', lic:true, d:'把老客人分群，找出該回訪的人'},
   'IPA_Kano':                  {n:'IPA × Kano 滿意度分析', ic:'📊', lic:true, d:'問卷分析出該先改善哪些地方'},
   'company-digital-transformation-analyzer': {n:'企業數位轉型分析', ic:'💻', d:'算導入系統能省多少人力、多久回本'},
+  'employer-payroll-cost-calculator': {n:'雇主人事成本試算', ic:'🧮', d:'請一個人老闆實際要付多少：勞健保、職災、勞退一次算清'},
   'expense-tracker-pwa':       {n:'隨手記帳', ic:'🪙', d:'手機記收支，月底看得到錢去哪了'},
   'product-title-generator':   {n:'跨境商品標題產生器', ic:'🏷', lic:true, d:'網店商品標題的關鍵字結構'}
 };
@@ -243,7 +244,7 @@ function tips(G, r){
   if(r.lostStock > r.demand * .06) out.push({k:'stock', t:'備貨不夠：賣完了還有 ' + r.lostStock + ' ' + t.unit + '想買。把備貨調成「剛好」或「多備」。', tool:t.goods === 'food' ? 'restaurant-menu-mix-calculator' : 'expense-tracker-pwa'});
   if(r.waste > r.revenue * .06) out.push({k:'waste', t:'報廢太多：丟掉了 ' + money(r.waste) + ' 元的食材。備貨調保守一點。', tool:'restaurant-menu-mix-calculator'});
   if(t.goods === 'keep' && r.inv * r.ticket * cogsRate(G) > Math.max(r.revenue * .8, 30000)) out.push({k:'inv', t:'庫存壓了約 ' + money(Math.round(r.inv * r.ticket * cogsRate(G))) + ' 元的錢在架上，先別多備。', tool:'expense-tracker-pwa'});
-  if(r.dec.staff > 0 && r.served < capacity(G, r.dec.staff - 1) * .85) out.push({k:'idle', t:'人手偏多：少一個人也接得住這些客人，可以省下約 ' + money(Math.round((WAGE + G.p.wageAdd) * EMP_LOAD)) + ' 元。', tool:'restaurant-feasibility-calculator'});
+  if(r.dec.staff > 0 && r.served < capacity(G, r.dec.staff - 1) * .85) out.push({k:'idle', t:'人手偏多：少一個人也接得住這些客人，可以省下約 ' + money(Math.round((WAGE + G.p.wageAdd) * EMP_LOAD)) + ' 元。', tool:'employer-payroll-cost-calculator'});
   if(r.sat < .55) out.push({k:'sat', t:'客人不太滿意（' + pct(r.sat) + '），口碑會往下掉。檢查價格、等候與品質。', tool:'IPA_Kano'});
   if(r.profit < 0 && r.served < r.cap * .7 && r.dec.mkt === 'none') out.push({k:'mkt', t:'店裡有空位卻沒客人：開始經營社群，粉絲是越早累積越有效。', tool:'SocialPost'});
   if(r.profit < 0 && be > 0) out.push({k:'be', t:'這個月虧損 ' + money(-r.profit) + ' 元。總開銷 ' + money(be) + ' 元，要賣到這個數字才打平。', tool:'restaurant-feasibility-calculator'});
@@ -293,7 +294,7 @@ var EVENTS = [
     ch:[{t:'接受', r:'租金漲 15%。', e:{rentAdd:.15}},
         {t:'簽三年長約，換只漲 5%', r:'房東同意了，租金漲 5%。', e:{rentAdd:.05}},
         {t:'硬談不漲', r:'談了三次，房東還是漲了 10%，關係也有點僵。', e:{rentAdd:.1}}]},
-  {id:'staffquit', ic:'🙋', title:'員工想加薪', w:3, once:true, cond:function(G){ var l = G.hist[G.hist.length - 1]; return !!l && l.dec.staff > 0; }, tool:'company-digital-transformation-analyzer',
+  {id:'staffquit', ic:'🙋', title:'員工想加薪', w:3, once:true, cond:function(G){ var l = G.hist[G.hist.length - 1]; return !!l && l.dec.staff > 0; }, tool:'employer-payroll-cost-calculator',
     text:function(){ return '做最久的那位員工說：「別家多給 3000，老闆你能不能也調一下？不然我月底可能就走了。」'; },
     ch:[{t:'加薪 3000 留人', r:'每位員工月薪 +3000（雇主另付的保費也跟著漲）。', e:{wageAdd:3000, sat:.02}},
         {t:'讓他走，再找新人', r:'招募花了 5000 元，新人手腳慢，這個月客人等比較久。', e:{cash:-5000, sat:-.06}}]},

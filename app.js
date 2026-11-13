@@ -99,7 +99,7 @@ function prepView(){
       '<div class="qbox"><p class="q">每月營業額至少要多少，才會打平？</p><div class="qopts">' +
       q.opts.map(function(v, i){ var cls = ans == null ? '' : i === q.a ? ' class="right"' : i === ans ? ' class="wrong"' : ''; return '<button data-be="' + i + '"' + cls + (ans != null ? ' disabled' : '') + '>' + yuan(v) + '</button>'; }).join('') + '</div>' +
       (ans != null ? '<p class="exp ' + (ans === q.a ? 'ok' : 'no') + '">' + (ans === q.a ? '⭐ 答對了！' : '答錯了，') + '固定開銷 ' + yuan(b.fixed) + ' ÷ 毛利率 ' + pct(b.margin) + ' ≈ <b>' + yuan(b.rev) + '</b>。只算固定開銷不算進貨成本，就會以為賣到 ' + yuan(b.fixed) + ' 就夠了。另外注意：<b>老闆自己的薪水還沒算進去</b>。</p>' : '') + '</div>';
-    ok = ans != null; tools = ['restaurant-feasibility-calculator', 'restaurant-menu-mix-calculator'];
+    ok = ans != null; tools = ['restaurant-feasibility-calculator', 'restaurant-menu-mix-calculator', 'employer-payroll-cost-calculator'];
   } else if(G.step === 4){
     var qs = D.prepQuiz(G), qa = G.qa || {}, all = true;
     h += '<h2>第 5 關：開店手續小考</h2><p class="lead">開店前要跑的手續很多，先考你三題（答對的可以在開店後少踩雷）。</p>';
