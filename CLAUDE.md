@@ -6,7 +6,7 @@
 
 - 純靜態：`index.html`（CSS）＋`data.js`（遊戲資料＋引擎，node 可 require）＋`app.js`（畫面）＋`watermark.js`（列印浮水印，`SOC_WATERMARK`，從開店清單複製）＋`manual.html`＋PWA。
 - 本機預覽 port **8877**（`.claude/launch.json` 的 `my-first-shop-sim`）。visitor-badge `m255525.myfirstshopsim`。
-- 尚未建 GitHub repo、未上線（`.github/workflows/pages.yml` 已備好，push master 自動部署）。
+- 部署：`.github/workflows/pages.yml`（push master 自動部署 GitHub Pages）：<https://m255525.github.io/my-first-shop-sim/>（2026-11-13 上線；repo 由使用者自己 `gh repo create`）。程式牆在 REPO_META（不在 LOCAL_APPS）。
 
 ## 引擎（data.js）
 - **所有金額、利率、來客、事件效果都是遊戲設定**，頁面與手冊都有警語。真實法規只出現在小考：起徵點 10 萬／5 萬、勞保 5 人、就保職災 1 人、食品業者登錄（食安法 §8）、鳳凰貸款身分（女性未滿 45／45～65／65 歲以下設籍離島）＋3 年內 18 小時課程——數字來源同開店前置清單與創業貸款資格核對，改規定要同步。
