@@ -55,7 +55,7 @@ function homeView(){
     '<p class="lead">從選店型、找地點、算損益兩平、辦手續、借錢開店，到經營 12 個月：颱風、負評、房東漲租、外送平台找上門……每一關都連到一個你真的用得到的創業工具。</p>' +
     '<div class="flow"><b>籌備 6 關</b><i>→</i><b>開幕</b><i>→</i><b>經營 12 個月</b><i>→</i><b>結算評等</b><i>→</i><b>帶去真實工具</b></div></div>' +
     '<div>' + sceneSvg(null) + '</div></div>' +
-    (G ? '<div class="alert warn" style="margin-top:1rem">你有一局還沒玩完：<b>' + esc(shopTitle(G)) + '</b>（' + progressText(G) + '）<div class="go" style="margin-top:.5rem"><button class="btn" data-act="resume">▶ 繼續上一局</button></div></div>' : '') +
+    (G ? '<div class="alert warn" style="margin-top:1rem">你有一局還沒玩完：<b>' + esc(shopTitle(G)) + '</b>（' + progressText(G) + '）<div class="go" style="margin-top:.5rem"><button class="btn" data-act="resume">▶ 繼續上一局</button><button class="btn alt" data-act="wipeAll">🧹 清除全部資料</button></div></div>' : '') +
     '</section>' +
     '<section class="card"><h2>👤 選一位創業者</h2><p class="lead">四位都是虛構人物，自有資金和能不能申請鳳凰貸款都不一樣。</p><div class="pick">' +
     D.PERSONAS.map(function(p){ return '<button class="opt" data-persona="' + p.id + '" aria-pressed="' + (V.newPersona === p.id) + '"><span class="oi">' + p.ic + '</span><span><b>' + p.n + '</b><small>' + p.desc + '</small><span class="nums"><span>自有資金 ' + wan(p.own) + '</span></span></span></button>'; }).join('') + '</div>' +
@@ -363,6 +363,7 @@ function openSettings(){
     sec('game', '遊戲進度', G ? shopTitle(G) + '・' + progressText(G) : '沒有進行中的遊戲', '<p class="small">進度每一步都會自動存在這台裝置。</p><div class="stack">' + (G ? '<button class="btn alt" data-act="copyCode">複製關卡代碼 ' + esc(G.code) + '</button><button class="btn red" data-act="abandon">放棄這一局</button>' : '<button class="btn" data-act="home">回首頁開新局</button>') + '</div>') +
     sec('board', '排行榜', board.length + ' 筆', '<div class="stack"><button class="btn red" data-act="clearBoard">清除排行榜</button></div>') +
     sec('pass', '工具護照', Object.keys(STAMPS).length + ' 章', '<div class="stack"><button class="btn alt" data-act="passport">打開工具護照</button><button class="btn red" data-act="clearStamps">清除所有蓋章</button></div>') +
+    sec('wipe', '🧹 清除全部資料', '', '<p class="small">一次清掉這台裝置上的遊戲進度、排行榜和工具護照，回到首頁重新開始。字體設定會保留。</p><div class="stack"><button class="btn red" data-act="wipeAll">清除全部資料，重新開始</button></div>') +
     sec('about', '關於本工具', '', '<p>👤 創作者 Mark Tsai（蔡豐全）<br><a href="mailto:tsaimark@gmail.com">tsaimark@gmail.com</a></p><div class="stack"><a class="btn alt" href="manual.html">📖 操作手冊</a><a class="btn alt" href="manual.html#creator">👤 創作者資訊</a><button class="btn alt" data-act="warn">⚠ 使用警語</button>' +
       (standalone ? '' : '<button class="btn alt" data-act="install">📲 加入主畫面</button>') + '</div><p class="small" style="margin-top:.5rem">訪客數 <img src="https://visitor-badge.laobi.icu/badge?page_id=m255525.myfirstshopsim" alt="訪客次數" height="20" loading="lazy" style="vertical-align:middle"></p>') +
     '<div class="stack"><button class="btn" data-act="close">關閉</button></div>';
@@ -464,6 +465,13 @@ var A = {
   copyCode:function(){ copyText(G.code, '關卡代碼已複製'); },
   print:function(){ window.print(); },
   abandon:function(){ confirmBox('這一局的進度會刪掉（排行榜和工具護照不受影響）。', 'abandonYes'); },
+  wipeAll:function(){ confirmBox('遊戲進度、排行榜、工具護照的蓋章都會刪掉，無法復原（字體設定會保留）。', 'wipeAllYes'); },
+  wipeAllYes:function(){
+    var keep = {fs:1, fold:1, warnSeen:1, marquee:1};
+    try{ Object.keys(localStorage).forEach(function(k){ if(k.indexOf(PFX) === 0 && !keep[k.slice(PFX.length)]) localStorage.removeItem(k); }); }catch(e){}
+    G = null; STAMPS = {}; V.home = true; V.report = false; V.newName = ''; V.newPersona = 'mei'; V.newCode = D.newCode();
+    closeModal(); render(); window.scrollTo(0, 0); toast('資料已清除，可以開新的一局了');
+  },
   abandonYes:function(){ G = null; save(); closeModal(); V.home = true; render(); },
   clearBoard:function(){ confirmBox('排行榜會全部清空。', 'clearBoardYes'); },
   clearBoardYes:function(){ lsDel('board'); closeModal(); render(); toast('排行榜已清除'); },

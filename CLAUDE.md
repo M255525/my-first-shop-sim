@@ -19,7 +19,7 @@
 - **改 data.js 後跑 `node tools/test_engine.mjs`**（隨機 3000 局：數值有限、事件條件成立、工具存在、同代碼可重現、小考答案、開店清單 ctx 合法）。
 
 ## 畫面（app.js）
-- localStorage 前綴 `fss.`：`game`（整局 G，每步自動存）、`board`（排行榜前 20）、`stamps`（工具護照 {id:日期}）、`fs`、`fold`、`warnSeen`、`marquee`。
+- localStorage 前綴 `fss.`：`game`（整局 G，每步自動存）、`board`（排行榜前 20）、`stamps`（工具護照 {id:日期}）、`fs`、`fold`、`warnSeen`、`marquee`。⚙「🧹 清除全部資料」（首頁未完成局旁也有）清掉 fs／fold／warnSeen／marquee 以外的 `fss.*`。
 - 畫面依 `G.stage`：prep／month（`V.report` 時顯示上月月報）／crisis／end。`est()` 是右側預估（不含亂數），邏輯要跟 `simulate()` 同步。
 - 小考選項順序用代碼 seed 洗牌（`shuffled`），資料裡正解一律放 index 0（測試有檢查）。
 - 點任何 `a[data-tool]` 都會蓋章。結算畫面只有 S/A/B 撒彩帶。
